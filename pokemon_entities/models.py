@@ -2,7 +2,7 @@ from django.db import models  # noqa F401
 
 class Pokemon(models.Model):
     id = models.AutoField(auto_created=True,  primary_key=True)
-    title = models.CharField(max_length=200)
+    title = models.CharField(max_length=200, unique=True)
     image = models.ImageField(upload_to='pokemons', default='pokemons/default.png')
 
     def __str__(self):
@@ -10,5 +10,6 @@ class Pokemon(models.Model):
 
 
 class PokemonEntity(models.Model):
+    pokemon_type = models.ForeignKey(Pokemon, on_delete=models.CASCADE, default=1)
     lat = models.FloatField()
     lot = models.FloatField()
