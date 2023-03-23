@@ -6,6 +6,8 @@ class Pokemon(models.Model):
     title_en = models.CharField('Название на английском', max_length=200, blank=True)
     title_jp = models.CharField('Название на японском', max_length=200, blank=True)
     description = models.TextField(default='Описание покемона')
+    next_evolution = models.IntegerField('ID В кого эволюционирует ', null=True)
+    previous_evolution = models.IntegerField('ID Из В кого эволюционирует', null=True)
     image = models.ImageField(upload_to='pokemons', default='pokemons/default.png')
 
     def __str__(self):
