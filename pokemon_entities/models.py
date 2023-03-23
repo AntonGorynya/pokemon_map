@@ -2,11 +2,14 @@ from django.db import models  # noqa F401
 
 class Pokemon(models.Model):
     id = models.AutoField(auto_created=True,  primary_key=True)
-    title = models.CharField(max_length=200, unique=True)
+    title_ru = models.CharField('Название на русском', max_length=200)
+    title_en = models.CharField('Название на английском', max_length=200, blank=True)
+    title_jp = models.CharField('Название на японском', max_length=200, blank=True)
+    description = models.TextField(default='Описание покемона')
     image = models.ImageField(upload_to='pokemons', default='pokemons/default.png')
 
     def __str__(self):
-        return self.title
+        return self.title_ru
 
 
 class PokemonEntity(models.Model):

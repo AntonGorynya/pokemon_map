@@ -2,6 +2,7 @@ import folium
 import json
 import datetime
 
+from django.utils import timezone
 from pokemon_entities.models import PokemonEntity, Pokemon
 from django.http import HttpRequest
 from django.http import HttpResponseNotFound
@@ -30,7 +31,7 @@ def add_pokemon(folium_map, lat, lon, image_url=DEFAULT_IMAGE_URL):
 
 
 def show_all_pokemons(request):
-    today = datetime.datetime.today()
+    today = timezone.localtime()
     pokemons = PokemonEntity.objects.filter(appeared_at__lt=today, disappeared_at__gt=today)
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
     for pokemon in pokemons:
@@ -49,7 +50,7 @@ def show_all_pokemons(request):
             pokemons_on_page.append({
                 'pokemon_id': pokemon.id,
                 'img_url': request.build_absolute_uri(pokemon.image.url),
-                'title_ru': pokemon.title,
+                'title_ru': pokemon.title_ru,
             })
 
     return render(request, 'mainpage.html', context={
@@ -59,22 +60,21 @@ def show_all_pokemons(request):
 
 
 def show_pokemon(request, pokemon_id):
-    with open('pokemon_entities/pokemons.json', encoding='utf-8') as database:
-        pokemons = json.load(database)['pokemons']
+    today = timezone.localtime()
+    pokemons = PokemonEntity.objects.filter(appeared_at__lt=today, disappeared_at__gt=today, pokemon_type__id=pokemon_id)
 
-    for pokemon in pokemons:
-        if pokemon['pokemon_id'] == int(pokemon_id):
-            requested_pokemon = pokemon
-            break
-    else:
+    if not pokemons:
         return HttpResponseNotFound('<h1>Такой покемон не найден</h1>')
 
+
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
-    for pokemon_entity in requested_pokemon['entities']:
+    for pokemon in pokemons:
+        print(request.build_absolute_uri(pokemon.pokemon_type.image.url))
+
         add_pokemon(
-            folium_map, pokemon_entity['lat'],
-            pokemon_entity['lon'],
-            pokemon['img_url']
+            folium_map, pokemon.lat,
+            pokemon.lon,
+            request.build_absolute_uri(pokemon.pokemon_type.image.url)
         )
 
     return render(request, 'pokemon.html', context={
