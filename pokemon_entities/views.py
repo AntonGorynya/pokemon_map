@@ -60,16 +60,19 @@ def show_all_pokemons(request):
 
 
 def show_pokemon(request, pokemon_id):
+    requested_pokemon_type = Pokemon.objects.get(id=pokemon_id)
+    if not requested_pokemon_type:
+        return HttpResponseNotFound('<h1>Такой покемон не найден</h1>')
+
     today = timezone.localtime()
     pokemons = PokemonEntity.objects.filter(
         appeared_at__lt=today,
         disappeared_at__gt=today,
         pokemon_type__id=pokemon_id
     )
-    if not pokemons:
-        return HttpResponseNotFound('<h1>Такой покемон не найден</h1>')
 
-    requested_pokemon_type = Pokemon.objects.get(id=pokemon_id)
+
+
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
     for pokemon in pokemons:
         url = pokemon.pokemon_type.image.path
