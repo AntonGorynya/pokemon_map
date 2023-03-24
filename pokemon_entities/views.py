@@ -1,10 +1,7 @@
 import folium
-import json
-import datetime
 
 from django.utils import timezone
 from pokemon_entities.models import PokemonEntity, Pokemon
-from django.http import HttpRequest
 from django.http import HttpResponseNotFound
 from django.shortcuts import render
 
@@ -70,8 +67,6 @@ def show_pokemon(request, pokemon_id):
         disappeared_at__gt=today,
         pokemon_type__id=pokemon_id
     )
-
-
 
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
     for pokemon in pokemons:
