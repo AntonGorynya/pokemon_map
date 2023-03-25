@@ -10,16 +10,10 @@ class Pokemon(models.Model):
     next_evolution = models.ForeignKey(
         'self',
         on_delete=models.SET_NULL,
-        related_name='previous',
-        null=True, blank=True,
+        related_name='prev_evolutions',
+        null=True,
+        blank=True,
         verbose_name='Следующая эволюция'
-    )
-    previous_evolution = models.ForeignKey(
-        'self',
-        on_delete=models.SET_NULL,
-        related_name='next',
-        null=True, blank=True,
-        verbose_name='Предыдущая эволюция'
     )
     image = models.ImageField('Изображение', upload_to='pokemons', default='pokemons/default.png')
 

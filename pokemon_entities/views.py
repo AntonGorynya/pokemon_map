@@ -84,16 +84,17 @@ def show_pokemon(request, pokemon_id):
         'description': requested_pokemon_type.description,
         'img_url':  request.build_absolute_uri(requested_pokemon_type.image.url),
     }
-    if requested_pokemon_type.previous_evolution:
+    previous_evolution = requested_pokemon_type.prev_evolutions.first()
+    if previous_evolution:
         pokemon_context.update(
             {
                 'previous_evolution': {
-                    'pokemon_id': requested_pokemon_type.previous_evolution.id,
-                    'title_ru': requested_pokemon_type.previous_evolution.title_ru,
-                    'title_en': requested_pokemon_type.previous_evolution.title_en,
-                    'title_jp': requested_pokemon_type.previous_evolution.title_jp,
-                    'description': requested_pokemon_type.previous_evolution.description,
-                    'img_url': request.build_absolute_uri(requested_pokemon_type.previous_evolution.image.url),
+                    'pokemon_id': previous_evolution.id,
+                    'title_ru': previous_evolution.title_ru,
+                    'title_en': previous_evolution.title_en,
+                    'title_jp': previous_evolution.title_jp,
+                    'description': previous_evolution.description,
+                    'img_url': request.build_absolute_uri(previous_evolution.image.url),
                 }
             }
         )
