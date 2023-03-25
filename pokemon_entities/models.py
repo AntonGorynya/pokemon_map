@@ -9,7 +9,7 @@ class Pokemon(models.Model):
     description = models.TextField(default='Описание покемона')
     next_evolution = models.ForeignKey(
         'self',
-        on_delete=models.SET_NULL,
+        on_delete=models.SET(None),
         related_name='prev_evolutions',
         null=True,
         blank=True,
@@ -22,16 +22,21 @@ class Pokemon(models.Model):
 
 
 class PokemonEntity(models.Model):
-    pokemon_type = models.ForeignKey(Pokemon, on_delete=models.CASCADE, default=5, verbose_name='Покемон')
+    ptype = models.ForeignKey(
+        Pokemon,
+        on_delete=models.CASCADE,
+        verbose_name='Покемон',
+        related_name='entities'
+    )
     lat = models.FloatField('Широта')
-    lon = models.FloatField('Долготота')
+    lon = models.FloatField('Долгота')
     appeared_at = models.DateTimeField('Время появления', null=True, blank=True)
     disappeared_at = models.DateTimeField('Время исчезания', null=True, blank=True)
-    level = models.IntegerField('Уровень', default=1)
-    health = models.IntegerField('Здоровье', default=1)
+    level = models.IntegerField('Уровень', default=0)
+    health = models.IntegerField('Здоровье', default=0)
     strength = models.IntegerField('Сила', default=0)
     defence = models.IntegerField('Защита', default=0)
     stamina = models.IntegerField('Стамина', default=0)
 
     def __str__(self):
-        return f'{self.pokemon_type} {self.lat} {self.lon}'
+        return f'{self.ptype.title_ru} {self.lat} {self.lon}'
