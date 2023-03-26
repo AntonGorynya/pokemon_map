@@ -41,7 +41,7 @@ def show_all_pokemons(request):
         add_pokemon(
             folium_map, entity.lat,
             entity.lon,
-            get_url(entity.ptype.image.path)
+            get_url(entity.pokemon.image.path)
         )
     pokemons_on_page = []
     pokemons = Pokemon.objects.all()
@@ -66,7 +66,7 @@ def show_pokemon(request, pokemon_id):
     pokemons = PokemonEntity.objects.filter(
         appeared_at__lt=today,
         disappeared_at__gt=today,
-        ptype__id=pokemon_id
+        pokemon__id=pokemon_id
     )
 
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
@@ -74,7 +74,7 @@ def show_pokemon(request, pokemon_id):
         add_pokemon(
             folium_map, pokemon.lat,
             pokemon.lon,
-            get_url(pokemon.ptype.image.path)
+            get_url(pokemon.pokemon.image.path)
         )
     serialized_pokemon = {
         'pokemon_id': requested_pokemon_type.id,

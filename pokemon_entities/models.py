@@ -9,20 +9,20 @@ class Pokemon(models.Model):
     description = models.TextField(default='Описание покемона')
     next_evolution = models.ForeignKey(
         'self',
-        on_delete=models.SET(None),
+        on_delete=models.SET_NULL,
         related_name='prev_evolutions',
         null=True,
         blank=True,
         verbose_name='Следующая эволюция'
     )
-    image = models.ImageField('Изображение', upload_to='pokemons', default='pokemons/default.png')
+    image = models.ImageField('Изображение', upload_to='pokemons', null=True)
 
     def __str__(self):
         return self.title_ru
 
 
 class PokemonEntity(models.Model):
-    ptype = models.ForeignKey(
+    pokemon = models.ForeignKey(
         Pokemon,
         on_delete=models.CASCADE,
         verbose_name='Покемон',
@@ -32,11 +32,11 @@ class PokemonEntity(models.Model):
     lon = models.FloatField('Долгота')
     appeared_at = models.DateTimeField('Время появления', null=True, blank=True)
     disappeared_at = models.DateTimeField('Время исчезания', null=True, blank=True)
-    level = models.IntegerField('Уровень', default=0)
-    health = models.IntegerField('Здоровье', default=0)
-    strength = models.IntegerField('Сила', default=0)
-    defence = models.IntegerField('Защита', default=0)
-    stamina = models.IntegerField('Стамина', default=0)
+    level = models.IntegerField('Уровень', null=True)
+    health = models.IntegerField('Здоровье', null=True)
+    strength = models.IntegerField('Сила', null=True)
+    defence = models.IntegerField('Защита', null=True)
+    stamina = models.IntegerField('Стамина', null=True)
 
     def __str__(self):
-        return f'{self.ptype.title_ru} {self.lat} {self.lon}'
+        return f'{self.pokemon.title_ru} {self.lat} {self.lon}'
